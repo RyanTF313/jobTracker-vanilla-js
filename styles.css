@@ -218,9 +218,6 @@ dialog {
   margin: 2rem auto;
 }
 
-#logout-modal {
-  margin: 0
-}
 
 :root {
   --status-applied: #3b82f6;
