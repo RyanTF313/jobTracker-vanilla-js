@@ -23,11 +23,9 @@ class State {
   };
 
   clearState = () => {
-    console.log("called clear state");
     const savedState = localStorage.getItem("jobTrackerState");
 
     if (savedState) {
-      console.log("saved state: ", JSON.parse(savedState));
       localStorage.removeItem("jobTrackerState");
     }
 
