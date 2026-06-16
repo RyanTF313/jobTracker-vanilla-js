@@ -218,6 +218,10 @@ dialog {
   margin: 2rem auto;
 }
 
+#job-board {
+  display: none;
+}
+
 
 :root {
   --status-applied: #3b82f6;

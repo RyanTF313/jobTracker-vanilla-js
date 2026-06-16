@@ -13,7 +13,7 @@ class State {
 
   loadState = () => {
     const savedState = localStorage.getItem("jobTrackerState");
-   
+
     if (savedState) {
       return localStorage.getItem("jobTrackerState");
     } else {
@@ -23,11 +23,17 @@ class State {
   };
 
   clearState = () => {
+    console.log("called clear state");
     const savedState = localStorage.getItem("jobTrackerState");
 
     if (savedState) {
+      console.log("saved state: ", JSON.parse(savedState));
       localStorage.removeItem("jobTrackerState");
     }
+
+    this.jobs = [];
+    this.currentUser = null;
+    this.auth = new Authentication();
   };
 }
 export default State;
