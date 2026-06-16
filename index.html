@@ -1,17 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Job Track</title>
-    <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
     <header>
-        <h1>Welcome to Job Track</h1>
-        <p>Let's hit the job search running</p>
+      <h1>Job Track</h1>
+      <p>Let's hit the job search running</p>
     </header>
-</body>
-<script src="./js/index.js" type="module"></script>
-<!-- Must be served from a server to work, so use Live Server or similar -->
+
+    <dialog id="login-modal">
+      <form id="login-form">
+        <h2>Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <button type="submit" id="login-button" class="btn">Login</button>
+      </form>
+    </dialog>
+
+    <section id="welcome-section">
+        <h3 id="welcome-message"></h3>
+        <form id="logout-form">
+        <button type="submit" id="logout-button" class="btn">Logout</button>
+      </form>
+    </section>
+  </body>
+  <script src="./js/index.js" type="module"></script>
+  <!-- Must be served from a server to work, so use Live Server or similar -->
 </html>
