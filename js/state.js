@@ -13,7 +13,7 @@ class State {
 
   loadState = () => {
     const savedState = localStorage.getItem("jobTrackerState");
-   
+
     if (savedState) {
       return localStorage.getItem("jobTrackerState");
     } else {
@@ -28,6 +28,10 @@ class State {
     if (savedState) {
       localStorage.removeItem("jobTrackerState");
     }
+
+    this.jobs = [];
+    this.currentUser = null;
+    this.auth = new Authentication();
   };
 }
 export default State;

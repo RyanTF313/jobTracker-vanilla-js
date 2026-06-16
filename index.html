@@ -22,10 +22,26 @@
     </dialog>
 
     <section id="welcome-section">
-        <h3 id="welcome-message"></h3>
-        <form id="logout-form">
+      <h3 id="welcome-message"></h3>
+      <form id="logout-form">
         <button type="submit" id="logout-button" class="btn">Logout</button>
       </form>
+    </section>
+
+    <section id="job-board">
+
+      <table>
+        <thead>
+          <tr>
+            <th><p>Wishlist</p> <button class="btn table-column" data-column="wishlist">+</button></th>
+            <th><p>Applied</p> <button class="btn table-column" data-column="applied">+</button></th>
+            <th><p>Interviewing</p> <button class="btn table-column" data-column="interviewing">+</button></th>
+            <th><p>Offer</p> <button class="btn table-column" data-column="offer">+</button></th>
+            <th><p>Rejected</p> <button class="btn table-column" data-column="rejected">+</button></th>
+          </tr>
+        </thead>
+        <tbody id="job-board-body"></tbody>
+      </table>
     </section>
   </body>
   <script src="./js/index.js" type="module"></script>
