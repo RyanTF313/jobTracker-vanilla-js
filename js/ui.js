@@ -9,14 +9,18 @@ const boardBodySection = document.getElementById("job-board-body");
 const addJobFormBtns = document.getElementsByClassName("btn table-column");
 const jobForm = document.getElementById("create-job-modal");
 const createJobBtn = document.getElementById("create-job-button");
+const jobSearchFormSection = document.getElementById("job-search-form-section");
+const jobSearchForm = document.getElementById("job-search-form");
+const jobSearchInput = document.getElementById("job-search");
 
-const handleInitialLoad = (isLoggedIn, currentState) => {
+const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
   if (isLoggedIn) {
     welcomeSection.style.display = "block";
-    welcomeMessage.textContent = `Welcome back, ${currentState.auth.user}!`;
+    welcomeMessage.textContent = `Welcome back, ${incomingCurrentState.auth.user}!`;
     loginModal.style.display = "none";
     logoutButton.style.display = "inline-block";
-    renderBoard(currentState);
+    jobSearchFormSection.style.display = "block";
+    renderBoard(incomingCurrentState);
   } else {
     welcomeSection.style.display = "none";
     loginModal.style.display = "block";
@@ -27,25 +31,26 @@ const handleInitialLoad = (isLoggedIn, currentState) => {
   loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const username = loginForm.elements["username"].value;
-    currentState.auth.login(username);
+    incomingCurrentState.auth.login(username);
     welcomeSection.style.display = "block";
-    welcomeMessage.textContent = `Welcome, ${currentState.auth.user}!`;
+    welcomeMessage.textContent = `Welcome, ${incomingCurrentState.auth.user}!`;
     loginModal.style.display = "none";
     logoutButton.style.display = "inline-block";
-    currentState.loadState();
-    renderBoard(currentState);
+    jobSearchFormSection.style.display = "block";
+    incomingCurrentState.loadState();
+    renderBoard(incomingCurrentState);
   });
 
   logoutButton.addEventListener("click", () => {
     welcomeSection.style.display = "none";
     loginModal.style.display = "block";
     logoutButton.style.display = "none";
-    currentState.auth.logout();
-    currentState.clearState();
-    renderBoard(currentState);
+    incomingCurrentState.auth.logout();
+    incomingCurrentState.clearState();
+    renderBoard(incomingCurrentState);
   });
 
-  addEventListenersToAddJobFormBtns(currentState);
+  addEventListenersToAddJobFormBtns(incomingCurrentState);
 };
 
 const renderBoard = (currentState) => {
@@ -57,10 +62,16 @@ const renderBoard = (currentState) => {
   }
 
   boardBodySection.innerHTML = "";
-  currentState.jobs.forEach((job) =>
+  const jobs = currentState.useFilteredJobs
+    ? currentState.filteredJobs
+    : currentState.jobs;
+
+  jobs.forEach((job) =>
     boardBodySection.appendChild(createJobRow(job, currentState)),
   );
   boardSection.style.display = "block";
+
+  addEventListenerToSearch(currentState);
 };
 
 const createJobRow = (job, currentState) => {
@@ -142,5 +153,40 @@ const addEventListenerToCreateJobBtn = (currentState, column) => {
     jobForm.style.display = "none";
   });
 };
+
+const addEventListenerToSearch = (currentState) => {
+  jobSearchForm.removeEventListener("submit", () => {}); // prevent duplicate eventListeners when rendoring the board
+  jobSearchInput.removeEventListener("search", () => {}); // prevent duplicate eventListeners when rendoring the board
+  jobSearchForm.addEventListener("submit", (ev) => ev.preventDefault());
+  jobSearchInput.addEventListener("search", (e) => {
+    e.preventDefault();
+    const searchFilter = e.target.value;
+
+    // I amy want to add some special UI/UX to show if the serach is related to a company or a role later for now show any company or role together if they match the search term.
+
+    // const searchCompanyResults = searchCompanies(searchFilter, currentState);
+    // const searchRoleResults = searchRoles(searchFilter, currentState);
+
+    currentState.setFilteredJobs(
+      search(searchFilter, currentState),
+      !!searchFilter,
+    );
+    renderBoard(currentState);
+  });
+};
+
+const search = (searchTerm, currentState) =>
+  currentState
+    .getJobs()
+    .filter((job) => job.company === searchTerm || job.position === searchTerm);
+
+// const searchByCompanies = (searchFilter, currentState) => {
+//   const jobs = currentState.getJobs();
+//   return jobs.filter((job) => job.company === searchFilter);
+// };
+// const searchByRoles = (searchFilter, currentState) => {
+//   const jobs = currentState.getJobs();
+//   return jobs.filter((job) => job.position === searchFilter);
+// };
 
 export { handleInitialLoad, renderBoard };
