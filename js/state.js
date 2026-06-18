@@ -33,6 +33,11 @@ class State {
     this.auth = new Authentication();
   };
 
+  removeJob = (jobId) => {
+    this.jobs = this.jobs.filter((job) => job.id !== jobId);
+    this.saveState();
+  };
+
   updateJob = (jobId, updates) => {
     const jobIndex = this.jobs.findIndex((job) => job.id === jobId);
     if (jobIndex >= 0) {
@@ -45,9 +50,9 @@ class State {
   getJobs = () => JSON.parse(localStorage.getItem("jobTrackerState")).jobs;
 
   setFilteredJobs = (jobs, hasSearchFilter) => {
-    this.useFilteredJobs = jobs.length || hasSearchFilter
-    this.filteredJobs = this.useFilteredJobs ? jobs: this.getJobs();
-    this.saveState()
+    this.useFilteredJobs = jobs.length || hasSearchFilter;
+    this.filteredJobs = this.useFilteredJobs ? jobs : this.getJobs();
+    this.saveState();
   };
 }
 export default State;
