@@ -45,7 +45,6 @@ class State {
   getJobs = () => JSON.parse(localStorage.getItem("jobTrackerState")).jobs;
 
   setFilteredJobs = (jobs, hasSearchFilter) => {
-    console.log(hasSearchFilter)
     this.useFilteredJobs = jobs.length || hasSearchFilter
     this.filteredJobs = this.useFilteredJobs ? jobs: this.getJobs();
     this.saveState()

@@ -155,6 +155,8 @@ const addEventListenerToCreateJobBtn = (currentState, column) => {
 };
 
 const addEventListenerToSearch = (currentState) => {
+  jobSearchForm.removeEventListener("submit", () => {}); // prevent duplicate eventListeners when rendoring the board
+  jobSearchInput.removeEventListener("search", () => {}); // prevent duplicate eventListeners when rendoring the board
   jobSearchForm.addEventListener("submit", (ev) => ev.preventDefault());
   jobSearchInput.addEventListener("search", (e) => {
     e.preventDefault();
@@ -164,8 +166,11 @@ const addEventListenerToSearch = (currentState) => {
 
     // const searchCompanyResults = searchCompanies(searchFilter, currentState);
     // const searchRoleResults = searchRoles(searchFilter, currentState);
-// console.log(search(searchFilter, currentState))
-    currentState.setFilteredJobs(search(searchFilter, currentState), !!searchFilter);
+
+    currentState.setFilteredJobs(
+      search(searchFilter, currentState),
+      !!searchFilter,
+    );
     renderBoard(currentState);
   });
 };
