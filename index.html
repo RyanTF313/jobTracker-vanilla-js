@@ -68,6 +68,11 @@
       </form>
     </section>
 
+    <nav id="view-nav">
+      <button class="btn view-tab active" data-view="board">Board View</button>
+      <button class="btn view-tab" data-view="analytics">Analytics View</button>
+    </nav>
+
     <section id="job-search-form-section">
       <form id="job-search-form">
         <label for="job-search">Search</label>
@@ -111,6 +116,8 @@
         <tbody id="job-board-body"></tbody>
       </table>
     </section>
+
+    <section id="analytics-section"></section>
   </body>
   <script src="./js/index.js" type="module"></script>
   <!-- Must be served from a server to work, so use Live Server or similar -->

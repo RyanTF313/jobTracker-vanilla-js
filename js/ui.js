@@ -1,4 +1,5 @@
 import { Job } from "./utils.js";
+import { renderAnalytics } from "./analytics.js";
 const loginModal = document.getElementById("login-modal");
 const loginForm = document.getElementById("login-form");
 const logoutButton = document.getElementById("logout-button");
@@ -14,9 +15,27 @@ const jobSearchForm = document.getElementById("job-search-form");
 const jobSearchInput = document.getElementById("job-search");
 const jobDetailsModal = document.getElementById("job-details-modal");
 const jobEditForm = document.getElementById("job-edit-form");
+const viewNav = document.getElementById("view-nav");
+const analyticsSection = document.getElementById("analytics-section");
+const viewTabs = document.querySelectorAll(".view-tab");
 jobEditForm.addEventListener("submit", (e) => e.preventDefault());
 
 let jobEditAbortController = null;
+
+const showBoardView = () => {
+  viewTabs.forEach((t) => t.classList.toggle("active", t.dataset.view === "board"));
+  jobSearchFormSection.style.display = "block";
+  boardSection.style.display = "block";
+  analyticsSection.style.display = "none";
+};
+
+const showAnalyticsView = (currentState) => {
+  viewTabs.forEach((t) => t.classList.toggle("active", t.dataset.view === "analytics"));
+  jobSearchFormSection.style.display = "none";
+  boardSection.style.display = "none";
+  analyticsSection.style.display = "block";
+  renderAnalytics(currentState);
+};
 
 const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
   if (isLoggedIn) {
@@ -24,12 +43,14 @@ const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
     welcomeMessage.textContent = `Welcome back, ${incomingCurrentState.auth.user}!`;
     loginModal.style.display = "none";
     logoutButton.style.display = "inline-block";
+    viewNav.style.display = "flex";
     jobSearchFormSection.style.display = "block";
     renderBoard(incomingCurrentState);
   } else {
     welcomeSection.style.display = "none";
     loginModal.style.display = "block";
     logoutButton.style.display = "none";
+    viewNav.style.display = "none";
     boardSection.style.display = "none";
   }
 
@@ -41,8 +62,9 @@ const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
     welcomeMessage.textContent = `Welcome, ${incomingCurrentState.auth.user}!`;
     loginModal.style.display = "none";
     logoutButton.style.display = "inline-block";
-    jobSearchFormSection.style.display = "block";
+    viewNav.style.display = "flex";
     incomingCurrentState.loadState();
+    showBoardView();
     renderBoard(incomingCurrentState);
   });
 
@@ -50,12 +72,15 @@ const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
     welcomeSection.style.display = "none";
     loginModal.style.display = "block";
     logoutButton.style.display = "none";
+    viewNav.style.display = "none";
+    analyticsSection.style.display = "none";
     incomingCurrentState.auth.logout();
     incomingCurrentState.clearState();
     renderBoard(incomingCurrentState);
   });
 
   addEventListenersToAddJobFormBtns(incomingCurrentState);
+  addEventListenersToViewTabs(incomingCurrentState);
 };
 
 const renderBoard = (currentState) => {
@@ -240,6 +265,18 @@ const addEventsToJobEditButtons = (jobToUpdateId, currentState) => {
     jobDetailsModal.style.display = "none";
     renderBoard(currentState);
   }, { signal });
+};
+
+const addEventListenersToViewTabs = (currentState) => {
+  viewTabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      if (tab.dataset.view === "analytics") {
+        showAnalyticsView(currentState);
+      } else {
+        showBoardView();
+      }
+    });
+  });
 };
 
 export { handleInitialLoad, renderBoard };
