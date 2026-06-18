@@ -46,6 +46,10 @@ class Job {
         this.salary = salary;
         this.id = crypto.randomUUID();
     }
+
+    updateJob = (updates) => {
+        Object.assign(this, updates);
+    }
 }
 
 export { Authentication, Job };

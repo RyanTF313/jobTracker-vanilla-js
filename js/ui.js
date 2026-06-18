@@ -56,12 +56,15 @@ const renderBoard = (currentState) => {
     return;
   }
 
-  boardBodySection.innerHTML = currentState.jobs.map((job) => createJobRow(job)).join("");
+  boardBodySection.innerHTML = "";
+  currentState.jobs.forEach((job) =>
+    boardBodySection.appendChild(createJobRow(job, currentState)),
+  );
   boardSection.style.display = "block";
 };
 
-const createJobRow = (job) => {
-  const { status, company } = job;
+const createJobRow = (job, currentState) => {
+  const { status, company, id } = job;
   const columnNumMap = {
     wishlist: 1,
     applied: 2,
@@ -75,16 +78,36 @@ const createJobRow = (job) => {
     const cell = document.createElement("td");
     const cellClass = i === columnNumMap[status] ? "card" : "";
     cell.className = cellClass;
+    cell.setAttribute("draggable", "true");
+    let statusToUpdate = null;
+
+    cell.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", id);
+    });
+    cell.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      const toColumn = e.currentTarget.getAttribute("data-column");
+      statusToUpdate = Object.keys(columnNumMap).find(
+        (key) => columnNumMap[key] === parseInt(toColumn),
+      );
+    });
+    cell.addEventListener("drop", (e) => {
+      if (!statusToUpdate) return;
+      const jobId = e.dataTransfer.getData("text/plain");
+      currentState.updateJob(jobId, { status: statusToUpdate });
+      renderBoard(currentState);
+    });
 
     if (i === columnNumMap[status]) {
       cell.textContent = company;
       tableRow.appendChild(cell);
     } else {
+      cell.setAttribute("data-column", i);
       tableRow.appendChild(cell);
     }
   }
 
-  return tableRow.outerHTML;
+  return tableRow;
 };
 
 const addEventListenersToAddJobFormBtns = (currentState) => {
@@ -99,9 +122,9 @@ const addEventListenersToAddJobFormBtns = (currentState) => {
 };
 
 const addEventListenerToCreateJobBtn = (currentState, column) => {
-  const oldBtn = document.getElementById("create-job-button"); 
+  const oldBtn = document.getElementById("create-job-button");
   const newBtn = oldBtn.cloneNode(true);
-  oldBtn.replaceWith(newBtn);//remove old button with event listener to prevent duplicates
+  oldBtn.replaceWith(newBtn); //remove old button with event listener to prevent duplicates
   newBtn.addEventListener("click", (e) => {
     e.preventDefault();
     const currentJobForm = document.getElementById("create-job-form");
