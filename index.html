@@ -38,6 +38,29 @@
       </form>
     </dialog>
 
+    <dialog id="job-details-modal">
+      <form id="job-edit-form">
+        <label for="role">Role:</label>
+        <input type="text" id="role" name="role" required />
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" required />
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status" required />
+        <label for="salary">Salary:</label>
+        <input type="text" id="salary" name="salary" required />
+        <label for="notes">Notes:</label>
+        <textarea name="notes" id="notes"></textarea>
+        <button type="button" id="job-remove-button" class="btn danger">
+          Remove Job
+        </button>
+        <button type="button" id="job-cancel-button" class="btn cancel">
+          Cancel
+        </button>
+        <!-- Cancel button uses type button instead of submit so we don't trigger builtin dom validation. -->
+        <button type="submit" id="job-save-button" class="btn">Save</button>
+      </form>
+    </dialog>
+
     <section id="welcome-section">
       <h3 id="welcome-message"></h3>
       <form id="logout-form">
@@ -48,7 +71,12 @@
     <section id="job-search-form-section">
       <form id="job-search-form">
         <label for="job-search">Search</label>
-        <input id="job-search" name="jobSearch" type="search" incremental="true"/>
+        <input
+          id="job-search"
+          name="jobSearch"
+          type="search"
+          incremental="true"
+        />
       </form>
     </section>
 

@@ -77,6 +77,7 @@ table {
   --color-success: #16a34a;
   --color-warning: #f59e0b;
   --color-danger: #dc2626;
+  --color-danger-hover: #951a1a;
 
   /* Backgrounds */
   --color-bg: #f8fafc;
@@ -103,11 +104,7 @@ table {
 
   /* Typography */
   --font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    sans-serif;
+    Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -195,6 +192,16 @@ header {
   background: var(--color-primary-hover);
 }
 
+.btn.cancel,
+.btn.danger {
+  background: var(--color-danger);
+}
+
+.btn.cancel:hover,
+.btn.danger:hover {
+  background: var(--color-danger-hover);
+}
+
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
@@ -229,6 +236,11 @@ dialog {
   .btn {
     margin: var(--space-4);
   }
+
+  textarea {
+    width: 100%;
+    min-height: 5rem;
+  }
 }
 
 #job-search-form-section {
@@ -241,7 +253,6 @@ dialog {
     height: 1.5rem;
   }
 }
-
 
 :root {
   --status-applied: #3b82f6;
@@ -289,7 +300,7 @@ dialog {
 }
 
 #job-board thead th::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -297,13 +308,21 @@ dialog {
   height: 3px;
 }
 
-#job-board thead th:nth-child(1)::before { background: var(--status-saved); }
-#job-board thead th:nth-child(2)::before { background: var(--status-applied); }
-#job-board thead th:nth-child(3)::before { background: var(--status-interview); }
-#job-board thead th:nth-child(4)::before { background: var(--status-offer); }
-#job-board thead th:nth-child(5)::before { background: var(--status-rejected); }
-
-
+#job-board thead th:nth-child(1)::before {
+  background: var(--status-saved);
+}
+#job-board thead th:nth-child(2)::before {
+  background: var(--status-applied);
+}
+#job-board thead th:nth-child(3)::before {
+  background: var(--status-interview);
+}
+#job-board thead th:nth-child(4)::before {
+  background: var(--status-offer);
+}
+#job-board thead th:nth-child(5)::before {
+  background: var(--status-rejected);
+}
 
 #job-board tbody td {
   vertical-align: top;
@@ -323,8 +342,18 @@ dialog {
   font-weight: 600;
 }
 
-#job-board .card:nth-child(1) { color: var(--status-saved); }
-#job-board .card:nth-child(2) { color: var(--status-applied); }
-#job-board .card:nth-child(3) { color: var(--status-interview); }
-#job-board .card:nth-child(4) { color: var(--status-offer); }
-#job-board .card:nth-child(5) { color: var(--status-rejected); }
+#job-board .card:nth-child(1) {
+  color: var(--status-saved);
+}
+#job-board .card:nth-child(2) {
+  color: var(--status-applied);
+}
+#job-board .card:nth-child(3) {
+  color: var(--status-interview);
+}
+#job-board .card:nth-child(4) {
+  color: var(--status-offer);
+}
+#job-board .card:nth-child(5) {
+  color: var(--status-rejected);
+}

@@ -12,6 +12,11 @@ const createJobBtn = document.getElementById("create-job-button");
 const jobSearchFormSection = document.getElementById("job-search-form-section");
 const jobSearchForm = document.getElementById("job-search-form");
 const jobSearchInput = document.getElementById("job-search");
+const jobDetailsModal = document.getElementById("job-details-modal");
+const jobEditForm = document.getElementById("job-edit-form");
+jobEditForm.addEventListener("submit", (e) => e.preventDefault());
+
+let jobEditAbortController = null;
 
 const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
   if (isLoggedIn) {
@@ -112,6 +117,18 @@ const createJobRow = (job, currentState) => {
     if (i === columnNumMap[status]) {
       cell.textContent = company;
       tableRow.appendChild(cell);
+      cell.addEventListener("click", (e) => {
+        jobDetailsModal.style.display = "block";
+        let { role, company, status, salary, notes } = jobEditForm.elements;
+
+        role.value = job.position;
+        company.value = job.company;
+        status.value = job.status;
+        salary.value = job.salary;
+        notes.value = job.notes;
+
+        addEventsToJobEditButtons(id, currentState);
+      });
     } else {
       cell.setAttribute("data-column", i);
       tableRow.appendChild(cell);
@@ -188,5 +205,41 @@ const search = (searchTerm, currentState) =>
 //   const jobs = currentState.getJobs();
 //   return jobs.filter((job) => job.position === searchFilter);
 // };
+
+const addEventsToJobEditButtons = (jobToUpdateId, currentState) => {
+  if (jobEditAbortController) jobEditAbortController.abort();
+  jobEditAbortController = new AbortController();
+  const { signal } = jobEditAbortController;
+
+  const cancelButton = document.getElementById("job-cancel-button");
+  const saveButton = document.getElementById("job-save-button");
+  const removeButton = document.getElementById("job-remove-button");
+
+  removeButton.addEventListener("click", () => {
+    currentState.removeJob(jobToUpdateId);
+    jobDetailsModal.style.display = "none";
+    renderBoard(currentState);
+  }, { signal });
+
+  cancelButton.addEventListener("click", () => {
+    jobEditForm.reset();
+    jobDetailsModal.style.display = "none";
+  }, { signal });
+
+  saveButton.addEventListener("click", () => {
+    const { role, company, status, salary, notes } = jobEditForm.elements;
+    const jobToUpdate = {
+      role: role.value,
+      company: company.value,
+      status: status.value,
+      salary: salary.value,
+      notes: notes.value,
+    };
+
+    currentState.updateJob(jobToUpdateId, jobToUpdate);
+    jobDetailsModal.style.display = "none";
+    renderBoard(currentState);
+  }, { signal });
+};
 
 export { handleInitialLoad, renderBoard };
