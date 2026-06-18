@@ -1,3 +1,4 @@
+import { Job } from "./utils.js";
 const loginModal = document.getElementById("login-modal");
 const loginForm = document.getElementById("login-form");
 const logoutButton = document.getElementById("logout-button");
@@ -5,6 +6,9 @@ const welcomeMessage = document.getElementById("welcome-message");
 const welcomeSection = document.getElementById("welcome-section");
 const boardSection = document.getElementById("job-board");
 const boardBodySection = document.getElementById("job-board-body");
+const addJobFormBtns = document.getElementsByClassName("btn table-column");
+const jobForm = document.getElementById("create-job-modal");
+const createJobBtn = document.getElementById("create-job-button");
 
 const handleInitialLoad = (isLoggedIn, currentState) => {
   if (isLoggedIn) {
@@ -33,26 +37,26 @@ const handleInitialLoad = (isLoggedIn, currentState) => {
   });
 
   logoutButton.addEventListener("click", () => {
-      welcomeSection.style.display = "none";
-      loginModal.style.display = "block";
-      logoutButton.style.display = "none";
-      boardSection.style.display = "none";
-      currentState.clearState();
-      currentState.auth.logout();
+    welcomeSection.style.display = "none";
+    loginModal.style.display = "block";
+    logoutButton.style.display = "none";
+    currentState.auth.logout();
+    currentState.clearState();
+    renderBoard(currentState);
   });
+
+  addEventListenersToAddJobFormBtns(currentState);
 };
 
 const renderBoard = (currentState) => {
-  const { jobs } = currentState;
-
   boardBodySection.innerHTML = "";
 
   if (!currentState.auth.isloggedIn) {
-    boardBodySection.innerHTML = "";
     boardSection.style.display = "none";
+    return;
   }
 
-  boardBodySection.innerHTML = jobs.map((job) => createJobRow(job)).join("");
+  boardBodySection.innerHTML = currentState.jobs.map((job) => createJobRow(job)).join("");
   boardSection.style.display = "block";
 };
 
@@ -69,6 +73,8 @@ const createJobRow = (job) => {
 
   for (let i = 1; i <= 5; i++) {
     const cell = document.createElement("td");
+    const cellClass = i === columnNumMap[status] ? "card" : "";
+    cell.className = cellClass;
 
     if (i === columnNumMap[status]) {
       cell.textContent = company;
@@ -78,7 +84,40 @@ const createJobRow = (job) => {
     }
   }
 
-  return tableRow.innerHTML;
+  return tableRow.outerHTML;
+};
+
+const addEventListenersToAddJobFormBtns = (currentState) => {
+  Array.from(addJobFormBtns).forEach((btn) => {
+    btn.removeEventListener("click", () => {}); // Remove any existing event listeners to prevent duplicates
+    btn.addEventListener("click", () => {
+      const column = btn.dataset.column;
+      jobForm.style.display = "block";
+      addEventListenerToCreateJobBtn(currentState, column);
+    });
+  });
+};
+
+const addEventListenerToCreateJobBtn = (currentState, column) => {
+  const oldBtn = document.getElementById("create-job-button"); 
+  const newBtn = oldBtn.cloneNode(true);
+  oldBtn.replaceWith(newBtn);//remove old button with event listener to prevent duplicates
+  newBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const currentJobForm = document.getElementById("create-job-form");
+    const position = currentJobForm.elements["position"].value;
+    const company = currentJobForm.elements["company"].value;
+    const notes = currentJobForm.elements["notes"].value;
+    const salary = currentJobForm.elements["salary"].value;
+
+    const newJob = new Job(position, company, column, notes, salary);
+
+    currentState.jobs.push(newJob);
+    currentState.saveState();
+    renderBoard(currentState);
+    currentJobForm.reset();
+    jobForm.style.display = "none";
+  });
 };
 
 export { handleInitialLoad, renderBoard };

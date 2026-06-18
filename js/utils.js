@@ -37,4 +37,15 @@ class Authentication {
   };
 }
 
-export { Authentication };
+class Job {
+    constructor(position, company, status, notes, salary) {
+        this.position = position;
+        this.company = company;
+        this.status = status;
+        this.notes = notes;
+        this.salary = salary;
+        this.id = crypto.randomUUID();
+    }
+}
+
+export { Authentication, Job };

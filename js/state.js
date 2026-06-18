@@ -15,20 +15,15 @@ class State {
     const savedState = localStorage.getItem("jobTrackerState");
 
     if (savedState) {
-      return localStorage.getItem("jobTrackerState");
+      const parsed = JSON.parse(savedState);
+      this.jobs = parsed.jobs || [];
+      this.currentUser = parsed.currentUser || null;
     } else {
-      localStorage.setItem("jobTrackerState", JSON.stringify(new State()));
-      return localStorage.getItem("jobTrackerState");
+      this.saveState();
     }
   };
 
   clearState = () => {
-    const savedState = localStorage.getItem("jobTrackerState");
-
-    if (savedState) {
-      localStorage.removeItem("jobTrackerState");
-    }
-
     this.jobs = [];
     this.currentUser = null;
     this.auth = new Authentication();

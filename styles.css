@@ -216,6 +216,24 @@ dialog {
   background: var(--color-surface);
   box-shadow: var(--shadow-lg);
   margin: 2rem auto;
+  text-align: center;
+  min-width: 300px;
+  z-index: 1000;
+
+  label {
+    display: block;
+    margin-bottom: var(--space-2);
+    font-weight: 600;
+  }
+
+  input {
+    display: block;
+    margin: 0 auto var(--space-4);
+  }
+
+  .btn {
+    margin: var(--space-4);
+  }
 }
 
 #job-board {
@@ -230,3 +248,80 @@ dialog {
   --status-rejected: #dc2626;
   --status-saved: #8b5cf6;
 }
+
+/* =========================
+   KANBAN BOARD
+========================= */
+
+#job-board {
+  padding: var(--space-6) 0;
+  overflow-x: auto;
+}
+
+#job-board table {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 600px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+#job-board thead th {
+  position: relative;
+  padding: var(--space-4);
+  background: var(--color-surface);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+}
+
+#job-board thead th:last-child {
+  border-right: none;
+}
+
+#job-board thead th::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+
+#job-board thead th:nth-child(1)::before { background: var(--status-saved); }
+#job-board thead th:nth-child(2)::before { background: var(--status-applied); }
+#job-board thead th:nth-child(3)::before { background: var(--status-interview); }
+#job-board thead th:nth-child(4)::before { background: var(--status-offer); }
+#job-board thead th:nth-child(5)::before { background: var(--status-rejected); }
+
+
+
+#job-board tbody td {
+  vertical-align: top;
+  padding: var(--space-2);
+  border-right: 1px solid var(--color-border);
+  background: var(--color-bg);
+}
+
+#job-board tbody td:last-child {
+  border-right: none;
+}
+
+#job-board .card {
+  max-width: none;
+  margin: 0;
+  text-align: center;
+  font-weight: 600;
+}
+
+#job-board .card:nth-child(1) { color: var(--status-saved); }
+#job-board .card:nth-child(2) { color: var(--status-applied); }
+#job-board .card:nth-child(3) { color: var(--status-interview); }
+#job-board .card:nth-child(4) { color: var(--status-offer); }
+#job-board .card:nth-child(5) { color: var(--status-rejected); }
