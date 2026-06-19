@@ -129,21 +129,13 @@ table {
   /* Transitions */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
-}
 
-[data-theme="dark"] {
-  --color-bg: #0f172a;
-  --color-surface: #1e293b;
-  --color-surface-hover: #334155;
-
-  --color-text: #f8fafc;
-  --color-text-muted: #94a3b8;
-
-  --color-border: #334155;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+  /* Status */
+  --status-applied: #3b82f6;
+  --status-interview: #f59e0b;
+  --status-offer: #16a34a;
+  --status-rejected: #dc2626;
+  --status-saved: #8b5cf6;
 }
 
 body {
@@ -192,14 +184,20 @@ header {
   background: var(--color-primary-hover);
 }
 
-.btn.cancel,
 .btn.danger {
   background: var(--color-danger);
 }
 
-.btn.cancel:hover,
 .btn.danger:hover {
   background: var(--color-danger-hover);
+}
+
+.btn.cancel {
+  background: var(--color-text-muted);
+}
+
+.btn.cancel:hover {
+  background: #475569;
 }
 
 .input {
@@ -253,14 +251,6 @@ dialog {
   input {
     height: 1.5rem;
   }
-}
-
-:root {
-  --status-applied: #3b82f6;
-  --status-interview: #f59e0b;
-  --status-offer: #16a34a;
-  --status-rejected: #dc2626;
-  --status-saved: #8b5cf6;
 }
 
 /* =========================
