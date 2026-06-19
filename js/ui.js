@@ -91,7 +91,6 @@ const renderBoard = (currentState) => {
     return;
   }
 
-  boardBodySection.innerHTML = "";
   const jobs = currentState.useFilteredJobs
     ? currentState.filteredJobs
     : currentState.jobs;
@@ -99,6 +98,14 @@ const renderBoard = (currentState) => {
   jobs.forEach((job) =>
     boardBodySection.appendChild(createJobRow(job, currentState)),
   );
+
+  const allStatuses = ["wishlist", "applied", "interviewing", "offer", "rejected"];
+  const occupiedStatuses = new Set(jobs.map((j) => j.status));
+  const emptyStatuses = allStatuses.filter((s) => !occupiedStatuses.has(s));
+  if (emptyStatuses.length > 0) {
+    boardBodySection.appendChild(createEmptyStateRow(emptyStatuses, allStatuses, currentState));
+  }
+
   boardSection.style.display = "block";
 
   addEventListenerToSearch(currentState);
@@ -161,6 +168,40 @@ const createJobRow = (job, currentState) => {
   }
 
   return tableRow;
+};
+
+const createEmptyStateRow = (emptyStatuses, allStatuses, currentState) => {
+  const columnNumMap = {
+    wishlist: 1,
+    applied: 2,
+    interviewing: 3,
+    offer: 4,
+    rejected: 5,
+  };
+  const row = document.createElement("tr");
+
+  allStatuses.forEach((status) => {
+    const cell = document.createElement("td");
+    cell.setAttribute("data-column", columnNumMap[status]);
+
+    if (emptyStatuses.includes(status)) {
+      const msg = document.createElement("p");
+      msg.className = "empty-state";
+      msg.textContent = "No jobs in this column yet!";
+      cell.appendChild(msg);
+    }
+
+    cell.addEventListener("dragover", (e) => e.preventDefault());
+    cell.addEventListener("drop", (e) => {
+      const jobId = e.dataTransfer.getData("text/plain");
+      currentState.updateJob(jobId, { status });
+      renderBoard(currentState);
+    });
+
+    row.appendChild(cell);
+  });
+
+  return row;
 };
 
 const addEventListenersToAddJobFormBtns = (currentState) => {
@@ -241,6 +282,7 @@ const addEventsToJobEditButtons = (jobToUpdateId, currentState) => {
   const removeButton = document.getElementById("job-remove-button");
 
   removeButton.addEventListener("click", () => {
+    if (!confirm("Are you sure you want to delete this job?")) return;
     currentState.removeJob(jobToUpdateId);
     jobDetailsModal.style.display = "none";
     renderBoard(currentState);
