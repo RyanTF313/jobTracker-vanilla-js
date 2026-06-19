@@ -9,6 +9,10 @@ class State {
     this.auth = new Authentication();
   }
 
+  toJSON() {
+    return { jobs: this.jobs, currentUser: this.currentUser };
+  }
+
   saveState = () => {
     localStorage.setItem("jobTrackerState", JSON.stringify(this));
   };
@@ -33,6 +37,13 @@ class State {
     this.auth = new Authentication();
   };
 
+  addJob = (position, company, status, notes, salary) => {
+    const newJob = new Job(position, company, status, notes, salary);
+    this.jobs.push(newJob);
+    this.saveState();
+    return newJob;
+  };
+
   removeJob = (jobId) => {
     this.jobs = this.jobs.filter((job) => job.id !== jobId);
     this.saveState();
@@ -47,12 +58,11 @@ class State {
     }
   };
 
-  getJobs = () => JSON.parse(localStorage.getItem("jobTrackerState")).jobs;
+  getJobs = () => this.jobs;
 
   setFilteredJobs = (jobs, hasSearchFilter) => {
     this.useFilteredJobs = jobs.length || hasSearchFilter;
-    this.filteredJobs = this.useFilteredJobs ? jobs : this.getJobs();
-    this.saveState();
+    this.filteredJobs = this.useFilteredJobs ? jobs : this.jobs;
   };
 }
 export default State;
