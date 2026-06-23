@@ -37,8 +37,15 @@ class State {
     this.auth = new Authentication();
   };
 
+  clearLocalStorage = () => {
+    localStorage.removeItem("jobTrackerState");
+    this.jobs = [];
+    this.filteredJobs = [];
+    this.useFilteredJobs = false;
+  };
+
   addJob = (position, company, status, notes, salary) => {
-    const newJob = new Job(position, company, status, notes, salary);
+    const newJob = new Job(position, company, status, notes, salary, this.auth.user);
     this.jobs.push(newJob);
     this.saveState();
     return newJob;
@@ -58,11 +65,11 @@ class State {
     }
   };
 
-  getJobs = () => this.jobs;
+  getJobs = () => this.jobs.filter((job) => job.owner === this.auth.user);
 
   setFilteredJobs = (jobs, hasSearchFilter) => {
     this.useFilteredJobs = jobs.length || hasSearchFilter;
-    this.filteredJobs = this.useFilteredJobs ? jobs : this.jobs;
+    this.filteredJobs = this.useFilteredJobs ? jobs : this.getJobs();
   };
 }
 export default State;

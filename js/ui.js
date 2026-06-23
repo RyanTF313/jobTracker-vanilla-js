@@ -3,6 +3,7 @@ import { renderAnalytics } from "./analytics.js";
 const loginModal = document.getElementById("login-modal");
 const loginForm = document.getElementById("login-form");
 const logoutButton = document.getElementById("logout-button");
+const clearStorageButton = document.getElementById("clear-storage-button");
 const welcomeMessage = document.getElementById("welcome-message");
 const welcomeSection = document.getElementById("welcome-section");
 const boardSection = document.getElementById("job-board");
@@ -91,6 +92,12 @@ const handleInitialLoad = (isLoggedIn, incomingCurrentState) => {
     renderBoard(incomingCurrentState);
   });
 
+  clearStorageButton.addEventListener("click", () => {
+    if (!confirm("This will permanently delete all your job data. Continue?")) return;
+    incomingCurrentState.clearLocalStorage();
+    renderBoard(incomingCurrentState);
+  });
+
   addEventListenersToAddJobFormBtns(incomingCurrentState);
   addEventListenersToViewTabs(incomingCurrentState);
   addEventListenerToSearch(incomingCurrentState);
@@ -106,7 +113,7 @@ const renderBoard = (currentState) => {
 
   const jobs = currentState.useFilteredJobs
     ? currentState.filteredJobs
-    : currentState.jobs;
+    : currentState.getJobs();
 
   jobs.forEach((job) =>
     boardBodySection.appendChild(createJobRow(job, currentState)),
@@ -246,7 +253,7 @@ const addEventListenerToSearch = (currentState) => {
 
 const search = (searchTerm, currentState) => {
   const term = searchTerm.toLowerCase();
-  return currentState.jobs.filter(
+  return currentState.getJobs().filter(
     (job) =>
       job.company.toLowerCase().includes(term) ||
       job.position.toLowerCase().includes(term),
