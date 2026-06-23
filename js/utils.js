@@ -5,7 +5,9 @@ class Authentication {
   }
 
   isLoggedInUser = () => {
-    const hasUserLoggedIn = sessionStorage.getItem("isLoggedIn") === "true" && sessionStorage.getItem("currentUser") !== null;
+    const hasUserLoggedIn =
+      sessionStorage.getItem("isLoggedIn") === "true" &&
+      sessionStorage.getItem("currentUser") !== null;
 
     if (hasUserLoggedIn) {
       this.isLoggedIn = true;
@@ -31,13 +33,14 @@ class Authentication {
 }
 
 class Job {
-  constructor(position, company, status, notes, salary) {
+  constructor(position, company, status, notes, salary, owner) {
     this.position = position;
     this.company = company;
     this.status = status;
     this.notes = notes;
     this.salary = salary;
     this.id = crypto.randomUUID();
+    this.owner = owner;
   }
 
   updateJob = (updates) => {
